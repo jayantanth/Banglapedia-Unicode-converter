@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+Copyright 2009-2010
+Santhosh Thottingal <santhosh.thottingal@gmail.com>
+This code is part of Silpa project.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Silpa- The Indian Language Computing project</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" media="screen" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+</head>
+<body id="type-b">
+<div id="wrap">
+    <div id="header">
+        <div id="toplinks">
+        <a href="index.html">Home</a></li> |
+        <a href="doc/index.html">Documentation</a> |
+        <a href="http://silpa.smc.org.in/wiki">Wiki</a> |
+        <a href="doc/apis.html">API</a> |
+        <a href="doc/credits.html">Credits</a> |
+        <a href="doc/license.html">License</a> 
+        </div>
+        <div id="site-name">
+        Silpa        
+        </div>
+        <div id="site-desc">Swathanthra Indian Language Computing Project</div>
+    </div>
+    
+    <div id="content-wrap">
+        <div id="utility">
+            <h2>Applications</h2>
+            <ul id="nav-secondary">
+            <li><a href="Guess_Language">Guess Language</a></li>
+            <li><a href="ASCII2Unicode">Encoding Converter</a></li>
+            <!-- <li><a href="Stem">Stemmer</a></li> 
+            <li><a href="Anagram">Anagram</a></li>
+            <li><a href="Normalize">Normalizer</a></li>-->
+            <li><a href="ApproxSearch">Approximate Search</a></li>
+            <li><a href="Sort">Sort</a></li> 
+            <li><a href="Spellcheck">Spellcheck</a></li>
+            <li><a href="Dictionary">Dictionary</a></li>
+            <li><a href="Transliterate" >Transliterate</a></li>
+            <li><a href="Hyphenate" >Hyphenation</a></li>
+            <li><a href="Syllabalize" >Syllabalize</a></li>
+            <li><a href="NGram" >N-Gram</a></li>
+            <li><a href="Fortune" >Random Quote</a></li>
+            <li><a href="Soundex">Indic Soundex</a></li>
+            <li><a href="CharDetails">Character Details</a></li>
+            <li><a href="Katapayadi">Katapayadi Numbers</a></li>
+            <li><a href="Webfonts">Webfonts</a></li>
+            <li><a href="TTS">Text to Speech</a></li>
+            <li><a href="Render">Complex script Renderer</a></li>
+            <!--<li><a href="Calendar">Calendars</a></li>-->
+            <li><a href="TextSimilarity">Text Similarity</a></li>
+            <li><a href="AllModules">Show All Modules  &#187;</a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <div id="breadcrumb">
+            </div>
+            <div id="moduleloadprogress">
+            </div>
+            <hr/>
+            <div id="form"><html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style></style>
+    <script type="text/javascript">
+    function convert(form)
+    {
+        var text= form.input_text.value;
+        var font= form.font.value;
+        var direction= form.direction.value;
+        $('#progress') .html("Converting. Please Wait...");
+        $('#result').html("");
+        var jsonRequest = {
+        "method" :  "modules.Payyans.Unicode2ASCII",
+        "params" : [text, font], 
+        "id" : ""
+        };
+         if(direction == "a2u"){
+         var jsonRequest = {
+        "method" :  "modules.Payyans.ASCII2Unicode",
+        "params" : [text, font], 
+        "id" : ""
+        };
+        }
+        $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        url: "JSONRPC",
+        data: $.toJSON(jsonRequest), 
+        dataType: "json",
+        success: function(msg) {
+            $('#progress').html("");
+            //alert(msg.result);
+            var result = msg.result.replace("\n", "&#13;")
+            $('#result') .html("<p>"+result+"</p>");
+        },
+        error: function(msg) { alert(msg.message); }
+    });
+        return false;
+    }
+    </script>
+  </head>
+  <body>
+    <h2> ASCII - Unicode Conversion</h2></hr>
+        <p>Enter the text for conversion in the below text area.
+        </p>
+        <form action="" method="post" onsubmit="return convert(this);">
+        <textarea  name='input_text' id='id1'></textarea><br/>
+        Select Font : <select id="font" name="font" style="width:12em;">
+        <option value="ambili">Ambili</option>
+        <option value="valluvar">Valluvar</option>
+        <option value="karthika">Karthika</option>
+        <option value="matweb">Mathrubhumi</option>
+        <option value="manorama">Manorama</option>
+        <option value="revathi">Revathi</option>
+        <option value="uma">Uma</option>
+	<option value="AkrutiOriSarala">Akruti Odiya Sarala</option>
+	<option value="thiruvachanam">Thiruvachanam</option>
+        </select>
+        <select id="direction" name="direction" style="width:12em;">
+        <option value="a2u">ASCII to Unicode</option>
+        <option value="u2a">Unicode to ASCII</option>
+        </select>
+        <input  type="submit" id="Convert" value="Convert"  style="width:12em;"/>
+        </br>
+        </form>
+        <hr/>
+        <div id="progress"></div>
+        <div id="successmessage"></div>
+        <div id="errormessage"></div>
+        <div id="result"></div>
+  </body>
+</html>
+</div>
+            <hr/>
+            
+        </div>
+    </div>
+	<div id="footer">            
+					<p>All rights reserved. &copy; 2008-2010, Silpa Team</p>
+					<p>Silpa service brought to you by <a href="http://smc.org.in">Swathanthra 
+					Malayalam Computing</a>.
+					It runs the Silpa python application hosting software, available under the <a href="http://www.fsf.org/licensing/licenses/agpl-3.0.html">GNU Affero General Public License.</a>
+					</p>
+					<p><a href="doc/contact.html">Contact Us</a>
+					| <a href="doc/privacy.html" >Privacy</a>|
+					<a href="https://savannah.nongnu.org/task/?group=silpa">Tasks</a> |
+					<a href="http://lists.nongnu.org/mailman/listinfo/silpa-discuss">Mailing List</a> |
+					<a href="doc/links.html">Links</a> |
+					<a href="doc/source.html">Source Code</a></p>
+	</div>
+    
+</div>
+<!-- Piwik -->
+<script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://thottingal.in/piwik/" : "http://thottingal.in/piwik/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 3);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="http://thottingal.in/piwik/piwik.php?idsite=3" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+</body>
+</html>
